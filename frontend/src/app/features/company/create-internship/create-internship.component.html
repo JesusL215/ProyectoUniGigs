@@ -1,0 +1,134 @@
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card shadow-sm">
+                <div class="card-header bg-success text-white">
+                    <h3 class="mb-0">
+                        <i class="bi bi-plus-circle me-2"></i>
+                        Crear Nueva Pasantía
+                    </h3>
+                </div>
+                <div class="card-body p-4">
+                    @if (errorMessage) {
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                        {{ errorMessage }}
+                        <button type="button" class="btn-close" (click)="errorMessage = ''"></button>
+                    </div>
+                    }
+
+                    <form [formGroup]="internshipForm" (ngSubmit)="onSubmit()">
+                        <!-- Title -->
+                        <div class="mb-3">
+                            <label for="title" class="form-label fw-bold">Título de la Pasantía *</label>
+                            <input type="text" class="form-control"
+                                [class.is-invalid]="title?.invalid && title?.touched" id="title" formControlName="title"
+                                placeholder="Ej: Desarrollador Frontend Junior">
+                            @if (title?.invalid && title?.touched) {
+                            <div class="invalid-feedback">
+                                @if (title?.errors?.['required']) {
+                                <span>El título es requerido.</span>
+                                }
+                                @if (title?.errors?.['minlength']) {
+                                <span>El título debe tener al menos 5 caracteres.</span>
+                                }
+                            </div>
+                            }
+                        </div>
+
+                        <!-- Description -->
+                        <div class="mb-3">
+                            <label for="description" class="form-label fw-bold">Descripción *</label>
+                            <textarea class="form-control"
+                                [class.is-invalid]="description?.invalid && description?.touched" id="description"
+                                formControlName="description" rows="5"
+                                placeholder="Describe las responsabilidades, objetivos y lo que el estudiante aprenderá..."></textarea>
+                            @if (description?.invalid && description?.touched) {
+                            <div class="invalid-feedback">
+                                @if (description?.errors?.['required']) {
+                                <span>La descripción es requerida.</span>
+                                }
+                                @if (description?.errors?.['minlength']) {
+                                <span>La descripción debe tener al menos 20 caracteres.</span>
+                                }
+                            </div>
+                            }
+                        </div>
+
+                        <!-- Location -->
+                        <div class="mb-3">
+                            <label for="location" class="form-label fw-bold">Ubicación *</label>
+                            <input type="text" class="form-control"
+                                [class.is-invalid]="location?.invalid && location?.touched" id="location"
+                                formControlName="location" placeholder="Ej: Bogotá, Colombia / Remoto">
+                            @if (location?.invalid && location?.touched) {
+                            <div class="invalid-feedback">
+                                La ubicación es requerida.
+                            </div>
+                            }
+                        </div>
+
+                        <!-- Duration -->
+                        <div class="mb-3">
+                            <label for="duration" class="form-label fw-bold">Duración *</label>
+                            <input type="text" class="form-control"
+                                [class.is-invalid]="duration?.invalid && duration?.touched" id="duration"
+                                formControlName="duration" placeholder="Ej: 3 meses / 6 semanas">
+                            @if (duration?.invalid && duration?.touched) {
+                            <div class="invalid-feedback">
+                                La duración es requerida.
+                            </div>
+                            }
+                        </div>
+
+                        <!-- Required Skills -->
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Habilidades Requeridas *</label>
+                            <div class="input-group mb-2">
+                                <input type="text" class="form-control" [(ngModel)]="newSkill"
+                                    [ngModelOptions]="{standalone: true}" placeholder="Ej: JavaScript, React, Python..."
+                                    (keyup.enter)="addSkill()">
+                                <button class="btn btn-outline-success" type="button" (click)="addSkill()">
+                                    <i class="bi bi-plus-lg"></i> Agregar
+                                </button>
+                            </div>
+
+                            @if (requiredSkills.length > 0) {
+                            <div class="d-flex flex-wrap gap-2 mb-2">
+                                @for (skill of requiredSkills.controls; track $index) {
+                                <span class="badge bg-primary fs-6 py-2 px-3">
+                                    {{ skill.value }}
+                                    <i class="bi bi-x-circle ms-2" style="cursor: pointer;"
+                                        (click)="removeSkill($index)"></i>
+                                </span>
+                                }
+                            </div>
+                            } @else {
+                            <small class="text-muted">Agrega al menos una habilidad requerida</small>
+                            }
+                        </div>
+
+                        <hr class="my-4">
+
+                        <!-- Buttons -->
+                        <div class="d-flex justify-content-between">
+                            <button type="button" class="btn btn-outline-secondary" routerLink="/company/dashboard">
+                                <i class="bi bi-arrow-left me-2"></i>
+                                Cancelar
+                            </button>
+                            <button type="submit" class="btn btn-success btn-lg" [disabled]="loading">
+                                @if (loading) {
+                                <span class="spinner-border spinner-border-sm me-2"></span>
+                                Creando...
+                                } @else {
+                                <i class="bi bi-check-circle me-2"></i>
+                                Publicar Pasantía
+                                }
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

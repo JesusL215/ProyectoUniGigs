@@ -1,0 +1,131 @@
+<div class="container mt-4">
+    <div class="row mb-4">
+        <div class="col">
+            <h2>
+                <i class="bi bi-briefcase-fill me-2"></i>
+                Explorar Pasantías
+            </h2>
+            <p class="text-muted">Encuentra la oportunidad perfecta para ti</p>
+        </div>
+    </div>
+
+    <!-- Search Bar -->
+    <div class="row mb-4">
+        <div class="col-md-8 mx-auto">
+            <div class="input-group input-group-lg">
+                <span class="input-group-text"><i class="bi bi-search"></i></span>
+                <input type="text" class="form-control" placeholder="Buscar por título, ubicación, habilidades..."
+                    [(ngModel)]="searchTerm" (input)="filterInternships()">
+                @if (searchTerm) {
+                <button class="btn btn-outline-secondary" (click)="searchTerm = ''; filterInternships()">
+                    <i class="bi bi-x-lg"></i>
+                </button>
+                }
+            </div>
+        </div>
+    </div>
+
+    <!-- Alerts -->
+    @if (successMessage) {
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <i class="bi bi-check-circle-fill me-2"></i>
+        {{ successMessage }}
+        <button type="button" class="btn-close" (click)="successMessage = ''"></button>
+    </div>
+    }
+
+    @if (errorMessage) {
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <i class="bi bi-exclamation-triangle-fill me-2"></i>
+        {{ errorMessage }}
+        <button type="button" class="btn-close" (click)="errorMessage = ''"></button>
+    </div>
+    }
+
+    <!-- Loading State -->
+    @if (loading) {
+    <div class="text-center py-5">
+        <div class="spinner-border text-primary" style="width: 3rem; height: 3rem;" role="status">
+            <span class="visually-hidden">Cargando...</span>
+        </div>
+        <p class="mt-3 text-muted">Cargando pasantías...</p>
+    </div>
+    }
+
+    <!-- No Results -->
+    @else if (filteredInternships.length === 0) {
+    <div class="text-center py-5">
+        <i class="bi bi-inbox text-muted" style="font-size: 5rem;"></i>
+        <h4 class="mt-3 text-muted">No se encontraron pasantías</h4>
+        <p class="text-muted">Intenta con otros términos de búsqueda</p>
+    </div>
+    }
+
+    <!-- Internships Grid -->
+    @else {
+    <div class="row g-4">
+        @for (internship of filteredInternships; track internship.id) {
+        <div class="col-md-6 col-lg-4">
+            <div class="card h-100 shadow-sm hover-shadow">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-start mb-2">
+                        <h5 class="card-title mb-0">{{ internship.title }}</h5>
+                        <span class="badge bg-success">Activo</span>
+                    </div>
+
+                    @if (internship.companyName) {
+                    <p class="text-muted mb-2">
+                        <i class="bi bi-building me-1"></i>
+                        {{ internship.companyName }}
+                    </p>
+                    }
+
+                    <p class="card-text text-muted small">
+                        {{ internship.description.length > 120 ? (internship.description.substring(0, 120) + '...') :
+                        internship.description }}
+                    </p>
+
+                    <div class="mb-3">
+                        <p class="mb-1"><strong><i class="bi bi-geo-alt me-2"></i>Ubicación:</strong> {{
+                            internship.location }}</p>
+                        <p class="mb-1"><strong><i class="bi bi-clock me-2"></i>Duración:</strong> {{
+                            internship.duration }}</p>
+                    </div>
+
+                    <div class="mb-3">
+                        <strong class="d-block mb-2"><i class="bi bi-star me-2"></i>Habilidades Requeridas:</strong>
+                        <div class="d-flex flex-wrap gap-1">
+                            @for (skill of internship.requiredSkills; track skill) {
+                            <span class="badge bg-primary">{{ skill }}</span>
+                            }
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer bg-white border-top-0">
+                    <button class="btn btn-primary w-100" (click)="applyToInternship(internship.id)">
+                        <i class="bi bi-send me-2"></i>
+                        Postularme
+                    </button>
+                </div>
+            </div>
+        </div>
+        }
+    </div>
+
+    <div class="row mt-4">
+        <div class="col text-center">
+            <p class="text-muted">Mostrando {{ filteredInternships.length }} de {{ internships.length }} pasantías</p>
+        </div>
+    </div>
+    }
+</div>
+
+<style>
+    .hover-shadow {
+        transition: box-shadow 0.3s ease;
+    }
+
+    .hover-shadow:hover {
+        box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
+    }
+</style>
