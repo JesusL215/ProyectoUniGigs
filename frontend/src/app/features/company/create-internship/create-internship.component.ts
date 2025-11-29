@@ -13,7 +13,7 @@ import { InternshipService } from '../../../services/internship.service';
         FormsModule
     ],
     templateUrl: './create-internship.component.html',
-    styleUrl: './create-internship.component.css'
+
 })
 export class CreateInternshipComponent {
     private fb = inject(FormBuilder);
